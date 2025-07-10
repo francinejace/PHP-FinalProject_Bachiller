@@ -71,39 +71,118 @@ This web application allows users to manage library activities like book searchi
 6. Use `.htaccess` to enable clean URLs and security headers.
 7. File naming follows camelCase or snake_case.
 
-### 📁 File Structure
+## 📁 File Structure
 
-PHP_FINALPROJECT <br>
-├─ admin <br>
-│ └─ dashboard.php <br>
-├─ assets <br>
-│ ├─ script.js <br>
-│ └─ style.css <br>
-├─ database <br>
-│ ├─ init_sqlite.sql <br>
-│ ├─ library_mysql.sql <br>
-│ ├─ library.db <br>
-│ └─ library.sql <br>
-├─ includes <br>
-│ ├─ footer.php <br>
-│ ├─ header.php <br>
-│ └─ navbar.php <br>
-├─ student <br>
-│ └─ dashboard.php <br>
-├─ user <br>
-│ ├─ login.php <br>
-│ ├─ login_demo.php <br>
-│ ├─ logout.php <br>
-│ ├─ register.php <br>
-│ └─ register_demo.php <br>
-├─ .htaccess <br>
-├─ config.php <br>
-├─ config_production.php <br>
-├─ DEPLOYMENT.md <br>
-├─ functions.php <br>
-├─ index.php <br>
-├─ test.php <br>
-└─ README.md <br>
+```
+PHP_FinalProject/
+├── admin/
+│   └── dashboard.php
+├── assets/
+│   ├── css/
+│   │   ├── example.css
+│   │   └── style.css
+│   ├── img/
+│   │   └── mochi-mochi.png
+│   └── js/
+│       ├── example.js
+│       ├── script.js
+│       └── style.css
+├── components/
+│   ├── componentGroup/
+│   │   └── example.component.php
+│   └── templates/
+│       ├── example.component.php
+│       ├── foot.component.php
+│       ├── footer.component.php
+│       ├── head.component.php
+│       └── nav.component.php
+├── database/
+│   ├── images.model.sql
+│   ├── init_sqlite.sql
+│   ├── library_mysql.sql
+│   ├── library.db
+│   ├── library.sql
+│   ├── nameOfModels.model.sql
+│   └── users.model.sql
+├── docs/
+│   ├── vsCode/
+│   │   └── PHP-CI4-AITS.code-profile
+│   ├── Database VS Code Manual.md
+│   ├── Docker Manual.md
+│   ├── Git Commits.md
+│   ├── Initial Checklist.md
+│   ├── Issues.md
+│   ├── PHP Dev Manual.md
+│   ├── PHP File Structure Manual.md
+│   ├── Request.md
+│   ├── VS Code Profile Manual.md
+│   └── workbook activity 3 updated.md
+├── errors/
+│   ├── .404.error.php
+│   ├── errorName.error.php
+│   └── unauthorized.error.php
+├── handlers/
+│   ├── auth.handler.php
+│   ├── example.handler.php
+│   ├── mongodbChecker.handler.php
+│   ├── postgreChecker.handler.php
+│   ├── signup.handler.php
+│   ├── updateAccount.handler.php
+│   └── userView.handler.php
+├── includes/
+│   ├── footer.php
+│   ├── header.php
+│   └── navbar.php
+├── layouts/
+│   ├── example.layout.php
+│   └── main.layout.php
+├── pages/
+│   ├── account/
+│   │   ├── assets/
+│   │   └── index.php
+│   ├── ExamplePage/
+│   │   ├── assets/
+│   │   │   ├── css/ → example.css
+│   │   │   ├── img/ → nyeebe_white.png
+│   │   │   └── js/ → example.js
+│   │   └── index.php
+│   ├── login/
+│   │   ├── assets/css/login.css
+│   │   └── index.php
+│   ├── logout/
+│   │   └── index.php
+│   ├── signup/
+│   │   └── index.php
+│   └── users/
+│       └── index.php
+├── sql/
+│   ├── New Table Auto Increment Script.sql
+│   └── Old Table Auto Increment.sql
+├── staticDatas/
+│   ├── dummies/
+│   │   ├── users.staticData.php
+│   │   ├── example.staticData.php
+│   │   ├── feature.staticData.php
+│   │   ├── footer.staticData.php
+│   │   ├── models.staticData.php
+│   │   └── navPages.staticData.php
+│   └── example.staticData.php
+├── student/
+│   └── dashboard.php
+├── user/
+│   ├── login_demo.php
+│   ├── login.php
+│   ├── logout.php
+│   ├── register_demo.php
+│   └── register.php
+├── utils/
+│   ├── auth.util.php
+│   ├── config.php
+│   ├── dbMigratePostgresql.util.php
+│   ├── dbResetPostgresql.util.php
+│   ├── dbSeederPostgresql.util.php
+│   ├── envSetter.php
+│   └── config.php (multiple copies, consider cleanup)
 
 
 ---
