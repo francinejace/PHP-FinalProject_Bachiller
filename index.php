@@ -11,6 +11,11 @@
 require_once __DIR__ . "/utils/config.php";
 require_once __DIR__ . "/utils/functions.php";
 
+// Define LibraX constant if not defined
+if (!defined('LibraX')) {
+    define('LibraX', 'LibraX Library Management System');
+}
+
 // Security: Regenerate session ID periodically
 if (!isset($_SESSION["last_regeneration"]) || time() - $_SESSION["last_regeneration"] > 300) {
     session_regenerate_id(true);
@@ -29,27 +34,36 @@ $stats = [
 ];
 
 try {
+    // Check if PDO connection exists
+    if (!isset($pdo)) {
+        throw new Exception("Database connection not available");
+    }
+    
     // Total books
     $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM books WHERE status = 'active'");
     $stmt->execute();
-    $stats["total_books"] = $stmt->fetch()["total"] ?? 0;
+    $result = $stmt->fetch();
+    $stats["total_books"] = $result ? ($result["total"] ?? 0) : 0;
     
     // Total users (excluding admins)
     $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM users WHERE role != 'admin' AND status = 'active'");
     $stmt->execute();
-    $stats["total_users"] = $stmt->fetch()["total"] ?? 0;
+    $result = $stmt->fetch();
+    $stats["total_users"] = $result ? ($result["total"] ?? 0) : 0;
     
     // Active borrowings
     $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM borrowings WHERE return_date IS NULL");
     $stmt->execute();
-    $stats["active_borrowings"] = $stmt->fetch()["total"] ?? 0;
+    $result = $stmt->fetch();
+    $stats["active_borrowings"] = $result ? ($result["total"] ?? 0) : 0;
     
     // Overdue books
     $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM borrowings WHERE return_date IS NULL AND due_date < CURDATE()");
     $stmt->execute();
-    $stats["overdue_books"] = $stmt->fetch()["total"] ?? 0;
+    $result = $stmt->fetch();
+    $stats["overdue_books"] = $result ? ($result["total"] ?? 0) : 0;
     
-} catch (PDOException $e) {
+} catch (Exception $e) {
     error_log("Failed to get statistics: " . $e->getMessage());
     // Stats remain at default values
 }
@@ -343,7 +357,7 @@ include __DIR__ . "/includes/header.php";
 }
 
 .hero-section::before {
-    content: ";
+    content: "";
     position: absolute;
     top: 0;
     left: 0;

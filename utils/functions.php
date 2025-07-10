@@ -752,5 +752,168 @@ function sendEmail($to, $subject, $message, $headers = []) {
     
     return mail($to, $subject, $message, $headerString);
 }
+
+/**
+ * Library Management System Functions
+ * 
+ * Common functions used throughout the application
+ */
+
+/**
+ * Check if user is logged in and session is valid
+ */
+function isSessionValid() {
+    return isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSION['role']);
+}
+
+/**
+ * Check if user has specific permission
+ */
+function hasPermission($permission) {
+    if (!isSessionValid()) {
+        return false;
+    }
+    
+    $role = $_SESSION['role'];
+    
+    // Define permissions for each role
+    $permissions = [
+        'admin' => ['manage_books', 'manage_users', 'view_borrowings', 'view_reports'],
+        'librarian' => ['manage_books', 'view_borrowings'],
+        'student' => ['browse_books', 'borrow_books']
+    ];
+    
+    return isset($permissions[$role]) && in_array($permission, $permissions[$role]);
+}
+
+/**
+ * Require authentication for specific role
+ */
+function requireAuth($required_role = null) {
+    if (!isSessionValid()) {
+        header('Location: ' . BASE_URL . 'user/login.php');
+        exit();
+    }
+    
+    if ($required_role && $_SESSION['role'] !== $required_role) {
+        header('Location: ' . BASE_URL . 'errors/unauthorized.error.php');
+        exit();
+    }
+}
+
+/**
+ * Sanitize input data
+ */
+function sanitizeInput($data) {
+    if (is_array($data)) {
+        return array_map('sanitizeInput', $data);
+    }
+    return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
+}
+
+/**
+ * Set flash message
+ */
+function setFlashMessage($type, $message) {
+    if (!isset($_SESSION['flash_messages'])) {
+        $_SESSION['flash_messages'] = [];
+    }
+    $_SESSION['flash_messages'][] = [
+        'type' => $type,
+        'text' => $message
+    ];
+}
+
+/**
+ * Get and clear flash messages
+ */
+function getFlashMessages() {
+    $messages = $_SESSION['flash_messages'] ?? [];
+    unset($_SESSION['flash_messages']);
+    return $messages;
+}
+
+/**
+ * Format date for display
+ */
+function formatDate($date, $format = 'M j, Y') {
+    if (!$date) return 'N/A';
+    try {
+        return date($format, strtotime($date));
+    } catch (Exception $e) {
+        return 'Invalid Date';
+    }
+}
+
+/**
+ * Format datetime for display
+ */
+function formatDateTime($datetime, $format = 'M j, Y g:i A') {
+    if (!$datetime) return 'N/A';
+    try {
+        return date($format, strtotime($datetime));
+    } catch (Exception $e) {
+        return 'Invalid DateTime';
+    }
+}
+
+/**
+ * Generate secure random token
+ */
+function generateToken($length = 32) {
+    return bin2hex(random_bytes($length));
+}
+
+/**
+ * Validate email address
+ */
+function isValidEmail($email) {
+    return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+}
+
+/**
+ * Get user's full name
+ */
+function getUserFullName($user_id) {
+    global $pdo;
+    
+    try {
+        $stmt = $pdo->prepare("SELECT full_name, username FROM users WHERE id = ?");
+        $stmt->execute([$user_id]);
+        $user = $stmt->fetch();
+        
+        return $user ? ($user['full_name'] ?: $user['username']) : 'Unknown User';
+    } catch (PDOException $e) {
+        error_log("Error getting user full name: " . $e->getMessage());
+        return 'Unknown User';
+    }
+}
+
+/**
+ * Check if file is valid image
+ */
+function isValidImage($file) {
+    $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+    $max_size = MAX_FILE_SIZE;
+    
+    if (!isset($file['type']) || !in_array($file['type'], $allowed_types)) {
+        return false;
+    }
+    
+    if (!isset($file['size']) || $file['size'] > $max_size) {
+        return false;
+    }
+    
+    return true;
+}
+
+/**
+ * Redirect with message
+ */
+function redirectWithMessage($url, $type, $message) {
+    setFlashMessage($type, $message);
+    header("Location: $url");
+    exit();
+}
 ?>
 

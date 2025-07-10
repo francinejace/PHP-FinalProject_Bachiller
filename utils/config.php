@@ -1,9 +1,8 @@
 <?php
 /**
- * Library Management System - Database Configuration
+ * Library Management System Configuration
  * 
- * This file contains database connection settings and application configuration.
- * For production deployment, update the database credentials below.
+ * Main configuration file for database connection and system settings
  */
 
 // Start session if not already started
@@ -11,76 +10,142 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Environment detection
-// $is_production = isset($_SERVER["HTTP_HOST"]) && $_SERVER["HTTP_HOST"] !== "localhost";
-$is_production = false; // Force development environment for local testing
-
-// Database configuration
-if ($is_production) {
-    // Production Database Configuration
-    // IMPORTANT: Update these values with your hosting provider\"s database credentials
-    define("DB_HOST", "localhost");
-    define("DB_USER", "your_db_username");
-    define("DB_PASS", "your_db_password");
-    define("DB_NAME", "your_db_name");
-    
-    // Disable error reporting in production
-    error_reporting(0);
-    ini_set("display_errors", 0);
-} else {
-    // Development Database Configuration
-    // Using SQLite for simplicity
-    define("DB_PATH", __DIR__ . "/../database/library.db");
-    
-    // Enable error reporting in development
-    error_reporting(E_ALL);
-    ini_set("display_errors", 1);
+// Define system constants
+if (!defined('SITE_NAME')) {
+    define('SITE_NAME', 'LibraX Library Management System');
+}
+if (!defined('LibraX')) {
+    define('LibraX', 'LibraX');
+}
+if (!defined('BASE_URL')) {
+    define('BASE_URL', 'http://localhost:8080/');
 }
 
-// Application settings
-define("SITE_NAME", "Library Management System");
-define("SITE_URL", $is_production ? "https://yourdomain.com" : "http://localhost:8000");
-define("ADMIN_EMAIL", $is_production ? "admin@yourdomain.com" : "admin@localhost");
+// Database configuration for XAMPP
+$db_config = [
+    'host' => 'localhost',
+    'dbname' => 'library_system',
+    'username' => 'root',
+    'password' => '',
+    'charset' => 'utf8mb4',
+    'port' => 3306
+];
 
-// Security settings
-define("CSRF_TOKEN_NAME", "csrf_token");
-define("SESSION_TIMEOUT", 3600); // 1 hour in seconds
-
-// Timezone
-date_default_timezone_set("Asia/Manila");
-
-// Database connection using PDO (recommended)
+// Initialize PDO connection
 try {
-    $pdo = new PDO("sqlite:" . DB_PATH);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-} catch(PDOException $e) {
-    if ($is_production) {
-        // Log error instead of displaying it in production
-        error_log("Database connection failed: " . $e->getMessage());
-        die("Database connection failed. Please contact the administrator.");
-    } else {
-        // Show detailed error in development
-        die("Database connection failed: " . $e->getMessage());
+    $dsn = "mysql:host={$db_config['host']};port={$db_config['port']};dbname={$db_config['dbname']};charset={$db_config['charset']}";
+    $pdo = new PDO($dsn, $db_config['username'], $db_config['password'], [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false
+    ]);
+    
+    // Create database tables if they don't exist
+    createTablesIfNotExist($pdo);
+    
+} catch (PDOException $e) {
+    error_log("Database connection failed: " . $e->getMessage());
+    // Don't expose database errors to users
+    die("Database connection failed. Please check your configuration.");
+}
+
+// System settings
+if (!defined('BOOKS_PER_PAGE')) {
+    define('BOOKS_PER_PAGE', 10);
+}
+if (!defined('MAX_BORROW_DAYS')) {
+    define('MAX_BORROW_DAYS', 14);
+}
+if (!defined('FINE_PER_DAY')) {
+    define('FINE_PER_DAY', 10.00);
+}
+if (!defined('MAX_BOOKS_PER_USER')) {
+    define('MAX_BOOKS_PER_USER', 3);
+}
+
+// File upload settings
+if (!defined('UPLOAD_DIR')) {
+    define('UPLOAD_DIR', __DIR__ . '/../uploads/');
+}
+if (!defined('MAX_FILE_SIZE')) {
+    define('MAX_FILE_SIZE', 5 * 1024 * 1024); // 5MB
+}
+
+// Create upload directory if it doesn't exist
+if (!file_exists(UPLOAD_DIR)) {
+    mkdir(UPLOAD_DIR, 0755, true);
+}
+
+/**
+ * Create database tables if they don't exist
+ */
+function createTablesIfNotExist($pdo) {
+    try {
+        // Create users table
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                username VARCHAR(50) UNIQUE NOT NULL,
+                password_hash VARCHAR(255) NOT NULL,
+                role ENUM('admin', 'librarian', 'student') DEFAULT 'student',
+                full_name VARCHAR(100),
+                email VARCHAR(100),
+                status ENUM('active', 'inactive') DEFAULT 'active',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            )
+        ");
+        
+        // Create books table
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS books (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                author VARCHAR(255) NOT NULL,
+                isbn VARCHAR(20),
+                category VARCHAR(100),
+                description TEXT,
+                quantity INT DEFAULT 1,
+                available_quantity INT DEFAULT 1,
+                status ENUM('active', 'inactive', 'archived') DEFAULT 'active',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            )
+        ");
+        
+        // Create borrowings table
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS borrowings (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                user_id INT NOT NULL,
+                book_id INT NOT NULL,
+                borrow_date DATE NOT NULL,
+                due_date DATE NOT NULL,
+                return_date DATE NULL,
+                fine_amount DECIMAL(10,2) DEFAULT 0.00,
+                status ENUM('borrowed', 'returned', 'overdue') DEFAULT 'borrowed',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+            )
+        ");
+        
+        // Create default admin user if none exists
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE role = 'admin'");
+        $stmt->execute();
+        if ($stmt->fetchColumn() == 0) {
+            $admin_password = password_hash('admin123', PASSWORD_DEFAULT);
+            $pdo->prepare("
+                INSERT INTO users (username, password_hash, role, full_name, email) 
+                VALUES ('admin', ?, 'admin', 'System Administrator', 'admin@library.com')
+            ")->execute([$admin_password]);
+        }
+        
+    } catch (PDOException $e) {
+        error_log("Failed to create tables: " . $e->getMessage());
     }
 }
-
-// Legacy mysqli connection for backward compatibility (if needed)
-// This part is commented out as it's not needed for SQLite and might cause issues.
-// $conn = null;
-// try {
-//     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-//     if ($conn->connect_error) {
-//         throw new Exception("Connection failed: " . $conn->connect_error);
-//     }
-//     $conn->set_charset("utf8mb4");
-// } catch(Exception $e) {
-//     if ($is_production) {
-//         error_log("Legacy database connection failed: " . $e->getMessage());
-//     } else {
-//         error_log("Legacy database connection failed: " . $e->getMessage());
-//     }
-// }
 
 /**
  * Generate CSRF token
