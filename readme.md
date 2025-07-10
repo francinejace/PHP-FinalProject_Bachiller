@@ -1,27 +1,23 @@
 <a name="readme-top">
 
-<br/>
-
 <br />
+
 <div align="center">
-  <a href="https://github.com/zyx-0314/">
-    <img src="./assets/img/nyebe_white.png" alt="Nyebe" width="130" height="100">
+  <a href="https://github.com/francinejace/PHP_FinalProject">
+    <img src="././assets/img/mochi-mochi.png" alt="mochi-mochi" width="130" height="100">
   </a>
-  <h3 align="center">Schedule Arranger</h3>
+  <h3 align="center">Library Management System</h3>
 </div>
+
 <div align="center">
-This is sample system for schedule Arranger.
+  A final requirement for <strong>CCS0043 – Application Development and Emerging Technologies</strong>. This PHP project demonstrates a simple yet secure library management system with role-based access, dynamic UI, and MySQL integration.
 </div>
 
 <br />
 
-
-![](https://visit-counter.vercel.app/counter.png?page=zyx-0314/php-demo-project)
+![](https://visit-counter.vercel.app/counter.png?page=francinejace/PHP_FinalProject)
 
 ---
-
-<br />
-<br />
 
 <details>
   <summary>Table of Contents</summary>
@@ -29,136 +25,95 @@ This is sample system for schedule Arranger.
     <li>
       <a href="#overview">Overview</a>
       <ol>
-        <li>
-          <a href="#key-components">Key Components</a>
-        </li>
-        <li>
-          <a href="#technology">Technology</a>
-        </li>
+        <li><a href="#key-components">Key Components</a></li>
+        <li><a href="#technology">Technology</a></li>
       </ol>
     </li>
-    <li>
-      <a href="#rule,-practices-and-principles">Rules, Practices and Principles</a>
-    </li>
-    <li>
-      <a href="#resources">Resources</a>
-    </li>
+    <li><a href="#rules-practices-and-standards">Rules, Practices and Standards</a></li>
+    <li><a href="#resources">Resources</a></li>
   </ol>
 </details>
 
 ---
 
-## Overview
+## 📖 Overview
 
-Schedule Arranger is a lightweight web application designed to simplify the creation and management of work schedules for two distinct user roles: Setters (who define and publish schedules) and Employees (who view their assignments). It addresses common coordination challenges—like overlapping shifts, last-minute changes, and missed reminders—by providing:
+This web application allows users to manage library activities like book searching, borrowing, and returning. Admin and student dashboards are built with PHP and styled for accessibility and usability.
 
-- Secure access (login/logout) for both roles
-- Real-time chat for on-the-fly adjustments and clarifications
-- Dynamic scheduling engine that supports one-off and recurring events
-- Automated reminders to keep everyone on track
+### 🔑 Key Components
 
-**Target Users**:
-- HR managers or team leads (Setters) who need to assign shifts or tasks
-- Staff members (Employees) who need clear, up-to-date schedules and timely notifications
+- Admin & Student Dashboards
+- User Login and Registration
+- Book Management (via MySQL)
+- Modular Includes (Header, Footer, Navbar)
+- Demo login/register files
+- SQLite and MySQL compatibility (SQL scripts provided)
 
-**Primary Use Cases**:
-- Weekly shift planning: A Setter drafts the upcoming week’s rota and publishes it.
-- Last-minute swap: Two Employees negotiate a shift swap via the built-in chat; the Setter then approves it.
-- Automated reminders: Employees receive notifications (email or in-app) 30 minutes before their next assignment.
+### ⚙️ Technology
 
-### Key Components
-
-| Component             | Purpose                                                               | Technologies & Interactions                                                                 |
-| --------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| **Auth Module**       | Handles user registration, login, logout, and role-based access.      | PHP sessions, PostgreSQL (user table); middleware checks on each page/request.              |
-| **Chat Service**      | Enables live messaging between Setters and Employees.                 | WebSockets (Ratchet PHP), MongoDB (chat history); integrates with frontend via JavaScript.  |
-| **Scheduler Engine**  | Creates, edits, and resolves conflicts in shift schedules.            | PHP cron jobs, custom algorithm; stores events in MongoDB; triggers reminder service.       |
-| **Reminder Service**  | Sends notifications to Employees before their scheduled events.       | PHP background worker, email via SMTP or in-app push; reads from MongoDB events collection. |
-| **Frontend UI**       | Responsive pages for both roles: dashboard, calendar view, chat pane. | HTML/CSS/Tailwind, JavaScript (vanilla or small libs), fetch/AJAX to backend endpoints.     |
-| **Data Access Layer** | Abstracts database operations for schedules, users, and messages.     | PHP data utilities (`.util.php`), uses PDO for PostgreSQL and MongoDB PHP library.          |
-
-
-### Technology
-
-#### Language
+![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![HTML](https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS](https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white)
-![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![JS](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 
-#### Framework/Library
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+---
 
-#### Databases
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
+## ✅ Rules, Practices and Standards
 
-## Rules, Practices and Principles
+1. `config.php` is used for local, `config_production.php` for deployment.
+2. Pages are categorized by role: `admin/`, `student/`, `user/`.
+3. Reusable layouts in `includes/`.
+4. Only `index.php` is at root for entry point.
+5. SQL files: 
+   - `library.sql` for MySQL 
+   - `init_sqlite.sql` for optional SQLite testing
+6. Use `.htaccess` to enable clean URLs and security headers.
+7. File naming follows camelCase or snake_case.
+
+### 📁 File Structure
+
+PHP_FINALPROJECT <br>
+├─ admin <br>
+│ └─ dashboard.php <br>
+├─ assets <br>
+│ ├─ script.js <br>
+│ └─ style.css <br>
+├─ database <br>
+│ ├─ init_sqlite.sql <br>
+│ ├─ library_mysql.sql <br>
+│ ├─ library.db <br>
+│ └─ library.sql <br>
+├─ includes <br>
+│ ├─ footer.php <br>
+│ ├─ header.php <br>
+│ └─ navbar.php <br>
+├─ student <br>
+│ └─ dashboard.php <br>
+├─ user <br>
+│ ├─ login.php <br>
+│ ├─ login_demo.php <br>
+│ ├─ logout.php <br>
+│ ├─ register.php <br>
+│ └─ register_demo.php <br>
+├─ .htaccess <br>
+├─ config.php <br>
+├─ config_production.php <br>
+├─ DEPLOYMENT.md <br>
+├─ functions.php <br>
+├─ index.php <br>
+├─ test.php <br>
+└─ README.md <br>
 
 
-1. Always use `AD-` in the front of the Title of the Project for the Subject followed by your custom naming.
-2. Do not rename `.php` files if they are pages; always use `index.php` as the filename.
-3. Add `.component` to the `.php` files if they are components code; example: `footer.component.php`.
-4. Add `.util` to the `.php` files if they are utility codes; example: `account.util.php`.
-5. Place Files in their respective folders.
-6. Different file naming Cases
-   | Naming Case | Type of code         | Example                           |
-   | ----------- | -------------------- | --------------------------------- |
-   | Pascal      | Utility              | Accoun.util.php                   |
-   | Camel       | Components and Pages | index.php or footer.component.php |
-8. Renaming of Pages folder names are a must, and relates to what it is doing or data it holding.
-9. Use proper label in your github commits: `feat`, `fix`, `refactor` and `docs`
-10. File Structure to follow below.
+---
 
-```
-AD-ProjectName
-└─ assets
-|   └─ css
-|   |   └─ name.css
-|   └─ img
-|   |   └─ name.jpeg/.jpg/.webp/.png
-|   └─ js
-|       └─ name.js
-└─ components
-|   └─ name.component.php
-|   └─ templates
-|      └─ name.component.php
-└─ handlers
-|   └─ name.handler.php
-└─ layout
-|   └─ name.layout.php
-└─ pages
-|  └─ pageName
-|     └─ assets
-|     |  └─ css
-|     |  |  └─ name.css
-|     |  └─ img
-|     |  |  └─ name.jpeg/.jpg/.webp/.png
-|     |  └─ js
-|     |     └─ name.js
-|     └─ index.php
-└─ staticData
-|  └─ name.staticdata.php
-└─ utils
-|   └─ name.utils.php
-└─ vendor
-└─ .gitignore
-└─ bootstrap.php
-└─ composer.json
-└─ composer.lock
-└─ index.php
-└─ readme.md
-└─ router.php
-```
-> The following should be renamed: name.css, name.js, name.jpeg/.jpg/.webp/.png, name.component.php(but not the part of the `component.php`), Name.utils.php(but not the part of the `utils.php`)
+## 📚 Resources
 
-## Resources
-
-| Title                   | Purpose                                                               | Link                                                                       |
-| ----------------------- | --------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| ChatGPT                 | General AI assistance for planning application architecture and docs. | [https://chat.openai.com](https://chat.openai.com)                         |
-| GitHub Copilot          | In-IDE code suggestions and boilerplate generation.                   | [https://github.com/features/copilot](https://github.com/features/copilot) |
-| YouTube “UI/UX Design”  | Video tutorials on modern web interface layouts and patterns.         | [https://www.youtube.com](https://www.youtube.com)                         |
-| Pinterest Design Boards | Inspiration for color schemes, typography, and component layouts.     | [https://www.pinterest.com](https://www.pinterest.com)                     |
-| Google Photos (Assets)  | Stock imagery and graphics used in UI mockups and documentation.      | [https://photos.google.com](https://photos.google.com)                     |
-| System Documentation    | Internal docs from PHP, MongoDB, and PostgreSQL used in development.  | — (see `/docs` folder in repo)                                             |
+| Title | Purpose | Link |
+|-------|---------|------|
+| PHP Manual | Language reference | https://www.php.net |
+| MySQL Docs | DB reference | https://dev.mysql.com/doc/ |
+| InfinityFree | Hosting | https://infinityfree.net |
+| W3Schools | Web dev help | https://www.w3schools.com |
+| Color Hunt | UI palette inspiration | https://colorhunt.co |
