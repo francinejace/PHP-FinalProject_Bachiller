@@ -10,6 +10,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = sanitizeInput($_POST["username"]);
     $password = $_POST["password"];
     $confirm_password = $_POST["confirm_password"];
+    $full_name = sanitizeInput($_POST["full_name"] ?? "");
+    $email = sanitizeInput($_POST["email"] ?? "");
     
     // Basic validation
     if (strlen($username) < 3) {
@@ -29,23 +31,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 // Hash the password
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
                 
-                // Get the role_id for 'student' (assuming 'student' role has id 3)
-                $stmt_role = $pdo->prepare("SELECT id FROM roles WHERE name = 'student'");
-                $stmt_role->execute();
-                $role_id = $stmt_role->fetchColumn();
-
-                if (!$role_id) {
-                    throw new Exception("Student role not found in database.");
-                }
-
                 // Insert new user with default role 'student'
-                $stmt = $pdo->prepare("INSERT INTO users (username, password_hash, role_id, full_name, email) VALUES (:username, :password_hash, :role_id, :full_name, :email)");
+                $stmt = $pdo->prepare("INSERT INTO users (username, password_hash, role, full_name, email) VALUES (:username, :password_hash, :role, :full_name, :email)");
                 $stmt->execute([
                     ":username" => $username,
                     ":password_hash" => $hashed_password,
-                    ":role_id" => $role_id,
-                    ":full_name" => "",
-                    ":email" => ""
+                    ":role" => "student",
+                    ":full_name" => $full_name,
+                    ":email" => $email
                 ]);
                 
                 setFlashMessage("success", "Registration successful! You can now log in with your credentials.");
@@ -70,7 +63,7 @@ include __DIR__ . "/../includes/header.php";
         <div class="card fade-in">
             <div class="card-header" style="text-align: center;">
                 <h2 class="card-title">Create Account</h2>
-                <p style="color: var(--text-light); margin: 0;">Join our library community today</p>
+                <p style="color: #666; margin: 0;">Join our library community today</p>
             </div>
             
             <?php if ($success_message): ?>
@@ -89,7 +82,17 @@ include __DIR__ . "/../includes/header.php";
             <?php endif; ?>
             
             <?php if (!$success_message): ?>
-            <form method="post" action="register.php">
+            <form method="post" action="register.php" style="padding: 1.5rem;">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" name="full_name" placeholder="Enter your full name" value="<?php echo isset($_POST["full_name"]) ? htmlspecialchars($_POST["full_name"]) : ""; ?>">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" name="email" placeholder="Enter your email address" value="<?php echo isset($_POST["email"]) ? htmlspecialchars($_POST["email"]) : ""; ?>">
+                </div>
+                
                 <div class="form-group">
                     <label class="form-label">Username</label>
                     <input type="text" class="form-input" name="username" placeholder="Choose a username" value="<?php echo isset($_POST["username"]) ? htmlspecialchars($_POST["username"]) : ""; ?>" required>
@@ -109,14 +112,118 @@ include __DIR__ . "/../includes/header.php";
                     Create Account
                 </button>
                 
-                <div style="text-align: center; color: var(--text-light);">
-                    <p>Already have an account? <a href="login.php" style="color: var(--primary-brown); text-decoration: none; font-weight: 600;">Sign in here</a></p>
-                    <p><a href="../index.php" style="color: var(--text-light); text-decoration: none;">← Back to Home</a></p>
+                <div style="text-align: center; color: #666;">
+                    <p>Already have an account? <a href="login.php" style="color: #8B4513; text-decoration: none; font-weight: 600;">Sign in here</a></p>
+                    <p><a href="../index.php" style="color: #666; text-decoration: none;">← Back to Home</a></p>
                 </div>
             </form>
             <?php endif; ?>
         </div>
     </div>
 </div>
+
+<style>
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.card-header {
+    background: #f8f6f0;
+    padding: 1.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.card-title {
+    color: #8B4513;
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #8B4513;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: #8B4513;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #A0522D;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
+}
+
+.alert {
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 1rem 1.5rem;
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
 
 <?php include __DIR__ . "/../includes/footer.php"; ?>
