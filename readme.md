@@ -73,7 +73,6 @@ This web application allows users to manage library activities like book searchi
 
 ## 📁 File Structure
 
-```
 PHP_FinalProject/
 ├── admin/
 │   └── dashboard.php
