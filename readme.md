@@ -73,115 +73,115 @@ This web application allows users to manage library activities like book searchi
 
 ## 📁 File Structure
 
-PHP_FinalProject/
-├── admin/
-│   └── dashboard.php
-├── assets/
-│   ├── css/
-│   │   ├── example.css
-│   │   └── style.css
-│   ├── img/
-│   │   └── mochi-mochi.png
-│   └── js/
-│       ├── example.js
-│       ├── script.js
-│       └── style.css
-├── components/
-│   ├── componentGroup/
-│   │   └── example.component.php
-│   └── templates/
-│       ├── example.component.php
-│       ├── foot.component.php
-│       ├── footer.component.php
-│       ├── head.component.php
-│       └── nav.component.php
-├── database/
-│   ├── images.model.sql
-│   ├── init_sqlite.sql
-│   ├── library_mysql.sql
-│   ├── library.db
-│   ├── library.sql
-│   ├── nameOfModels.model.sql
-│   └── users.model.sql
-├── docs/
-│   ├── vsCode/
-│   │   └── PHP-CI4-AITS.code-profile
-│   ├── Database VS Code Manual.md
-│   ├── Docker Manual.md
-│   ├── Git Commits.md
-│   ├── Initial Checklist.md
-│   ├── Issues.md
-│   ├── PHP Dev Manual.md
-│   ├── PHP File Structure Manual.md
-│   ├── Request.md
-│   ├── VS Code Profile Manual.md
-│   └── workbook activity 3 updated.md
-├── errors/
-│   ├── .404.error.php
-│   ├── errorName.error.php
-│   └── unauthorized.error.php
-├── handlers/
-│   ├── auth.handler.php
-│   ├── example.handler.php
-│   ├── mongodbChecker.handler.php
-│   ├── postgreChecker.handler.php
-│   ├── signup.handler.php
-│   ├── updateAccount.handler.php
-│   └── userView.handler.php
-├── includes/
-│   ├── footer.php
-│   ├── header.php
-│   └── navbar.php
-├── layouts/
-│   ├── example.layout.php
-│   └── main.layout.php
-├── pages/
-│   ├── account/
-│   │   ├── assets/
-│   │   └── index.php
-│   ├── ExamplePage/
-│   │   ├── assets/
-│   │   │   ├── css/ → example.css
-│   │   │   ├── img/ → nyeebe_white.png
-│   │   │   └── js/ → example.js
-│   │   └── index.php
-│   ├── login/
-│   │   ├── assets/css/login.css
-│   │   └── index.php
-│   ├── logout/
-│   │   └── index.php
-│   ├── signup/
-│   │   └── index.php
-│   └── users/
-│       └── index.php
-├── sql/
-│   ├── New Table Auto Increment Script.sql
-│   └── Old Table Auto Increment.sql
-├── staticDatas/
-│   ├── dummies/
-│   │   ├── users.staticData.php
-│   │   ├── example.staticData.php
-│   │   ├── feature.staticData.php
-│   │   ├── footer.staticData.php
-│   │   ├── models.staticData.php
-│   │   └── navPages.staticData.php
-│   └── example.staticData.php
-├── student/
-│   └── dashboard.php
-├── user/
-│   ├── login_demo.php
-│   ├── login.php
-│   ├── logout.php
-│   ├── register_demo.php
-│   └── register.php
-├── utils/
-│   ├── auth.util.php
-│   ├── config.php
-│   ├── dbMigratePostgresql.util.php
-│   ├── dbResetPostgresql.util.php
-│   ├── dbSeederPostgresql.util.php
-│   ├── envSetter.php
-│   └── config.php (multiple copies, consider cleanup)
+PHP_FinalProject/<br>
+├── admin/<br>
+│   └── dashboard.php<br>
+├── assets/<br>
+│   ├── css/<br>
+│   │   ├── example.css<br>
+│   │   └── style.css<br>
+│   ├── img/<br>
+│   │   └── mochi-mochi.png<br>
+│   └── js/<br>
+│       ├── example.js<br>
+│       ├── script.js<br>
+│       └── style.css<br>
+├── components/<br>
+│   ├── componentGroup/<br>
+│   │   └── example.component.php<br>
+│   └── templates/<br>
+│       ├── example.component.php<br>
+│       ├── foot.component.php<br>
+│       ├── footer.component.php<br>
+│       ├── head.component.php<br>
+│       └── nav.component.php<br>
+├── database/<br>
+│   ├── images.model.sql<br>
+│   ├── init_sqlite.sql<br>
+│   ├── library_mysql.sql<br>
+│   ├── library.db<br>
+│   ├── library.sql<br>
+│   ├── nameOfModels.model.sql<br>
+│   └── users.model.sql<br>
+├── docs/<br>
+│   ├── vsCode/<br>
+│   │   └── PHP-CI4-AITS.code-profile<br>
+│   ├── Database VS Code Manual.md<br>
+│   ├── Docker Manual.md<br>
+│   ├── Git Commits.md<br>
+│   ├── Initial Checklist.md<br>
+│   ├── Issues.md<br>
+│   ├── PHP Dev Manual.md<br>
+│   ├── PHP File Structure Manual.md<br>
+│   ├── Request.md<br>
+│   ├── VS Code Profile Manual.md<br>
+│   └── workbook activity 3 updated.md<br>
+├── errors/<br>
+│   ├── .404.error.php<br>
+│   ├── errorName.error.php<br>
+│   └── unauthorized.error.php<br>
+├── handlers/<br>
+│   ├── auth.handler.php<br>
+│   ├── example.handler.php<br>
+│   ├── mongodbChecker.handler.php<br>
+│   ├── postgreChecker.handler.php<br>
+│   ├── signup.handler.php<br>
+│   ├── updateAccount.handler.php<br>
+│   └── userView.handler.php<br>
+├── includes/<br>
+│   ├── footer.php<br>
+│   ├── header.php<br>
+│   └── navbar.php<br>
+├── layouts/<br>
+│   ├── example.layout.php<br>
+│   └── main.layout.php<br>
+├── pages/<br>
+│   ├── account/<br>
+│   │   ├── assets/<br>
+│   │   └── index.php<br>
+│   ├── ExamplePage/<br>
+│   │   ├── assets/<br>
+│   │   │   ├── css/ → example.css<br>
+│   │   │   ├── img/ → nyeebe_white.png<br>
+│   │   │   └── js/ → example.js<br>
+│   │   └── index.php<br>
+│   ├── login/<br>
+│   │   ├── assets/css/login.css<br>
+│   │   └── index.php<br>
+│   ├── logout/<br>
+│   │   └── index.php<br>
+│   ├── signup/<br>
+│   │   └── index.php<br>
+│   └── users/<br>
+│       └── index.php<br>
+├── sql/<br>
+│   ├── New Table Auto Increment Script.sql<br>
+│   └── Old Table Auto Increment.sql<br>
+├── staticDatas/<br>
+│   ├── dummies/<br>
+│   │   ├── users.staticData.php<br>
+│   │   ├── example.staticData.php<br>
+│   │   ├── feature.staticData.php<br>
+│   │   ├── footer.staticData.php<br>
+│   │   ├── models.staticData.php<br>
+│   │   └── navPages.staticData.php<br>
+│   └── example.staticData.php<br>
+├── student/<br>
+│   └── dashboard.php<br>
+├── user/<br>
+│   ├── login_demo.php<br>
+│   ├── login.php<br>
+│   ├── logout.php<br>
+│   ├── register_demo.php<br>
+│   └── register.php<br>
+├── utils/<br>
+│   ├── auth.util.php<br>
+│   ├── config.php<br>
+│   ├── dbMigratePostgresql.util.php<br>
+│   ├── dbResetPostgresql.util.php<br>
+│   ├── dbSeederPostgresql.util.php<br>
+│   ├── envSetter.php<br>
+│   └── config.php (multiple copies, consider cleanup)<br>
 
 
 ---
