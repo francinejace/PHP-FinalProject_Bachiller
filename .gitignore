@@ -1,0 +1,7 @@
+.qodo
+.php_tmp
+vendor
+.github
+.env
+/uploads/post
+/uploads/profile

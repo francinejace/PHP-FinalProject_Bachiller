@@ -1,0 +1,54 @@
+services:
+  schedule-arranger:
+    build:
+      context: .
+    container_name: schedule-arranger-service
+    ports:
+      - "8000:8000"
+    develop:
+      watch:
+        - path: .
+          target: /var/www/html
+          action: sync
+        - path: ./composer.json
+          action: rebuild
+        - path: ./composer.lock
+          action: rebuild
+    volumes:
+      - ./uploads:/var/www/html/uploads
+    depends_on:
+      - mongodb
+      - postgresql
+
+  mongodb:
+    image: mongo:latest
+    container_name: schedule-arranger-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootPassword
+      MONGO_INITDB_DATABASE: schedule_arranger
+    ports:
+      - "27111:27017"
+    volumes:
+      - schedule-arranger-mongodb:/data/db
+
+  postgresql:
+    image: postgres:15
+    container_name: schedule-arranger-postgresql
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: schedule_arranger
+    ports:
+      - "5112:5432"
+    volumes:
+      - schedule-arranger-postgresql:/var/lib/postgresql/data
+
+volumes:
+  schedule-arranger-mongodb:
+    driver: local
+  schedule-arranger-postgresql:
+    driver: local
+  schedule-arranger-uploads:
+    driver: local
