@@ -16,39 +16,30 @@ services:
           action: rebuild
     volumes:
       - ./uploads:/var/www/html/uploads
-    depends_on:
-      - mongodb
-      - postgresql
-
-  mongodb:
-    image: mongo:latest
-    container_name: schedule-arranger-mongodb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: rootPassword
-      MONGO_INITDB_DATABASE: schedule_arranger
-    ports:
-      - "27111:27017"
-    volumes:
-      - schedule-arranger-mongodb:/data/db
+      - DB_HOST=db
+      - DB_NAME=library
+      - DB_USER=admin
+      - DB_PASS=admin123
+    depends_on:
+      - db
 
-  postgresql:
-    image: postgres:15
-    container_name: schedule-arranger-postgresql
+  db:
+    image: mysql:8.0
+    container_name: schedule-arranger-mysql
     restart: always
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: schedule_arranger
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: library
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin123
     ports:
-      - "5112:5432"
+      - "3306:3306"
     volumes:
-      - schedule-arranger-postgresql:/var/lib/postgresql/data
+      - schedule-arranger-mysql:/var/lib/mysql
 
 volumes:
-  schedule-arranger-mongodb:
-    driver: local
-  schedule-arranger-postgresql:
+  schedule-arranger-mysql:
     driver: local
   schedule-arranger-uploads:
     driver: local

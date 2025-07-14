@@ -10,44 +10,28 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Define system constants
-if (!defined('SITE_NAME')) {
-    define('SITE_NAME', 'LibraX Library Management System');
-}
-if (!defined('LibraX')) {
-    define('LibraX', 'LibraX');
-}
-if (!defined('BASE_URL')) {
-    define('BASE_URL', 'http://localhost:8080/');
-}
+$host = getenv('DB_HOST') ?: 'localhost';
+$db   = getenv('DB_NAME') ?: 'library';
+$user = getenv('DB_USER') ?: 'admin';
+$pass = getenv('DB_PASS') ?: 'admin123';
+$charset = 'utf8mb4';
 
-// Database configuration for XAMPP
-$db_config = [
-    'host' => 'localhost',
-    'dbname' => 'library_system',
-    'username' => 'root',
-    'password' => '',
-    'charset' => 'utf8mb4',
-    'port' => 3306
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
 ];
-
-// Initialize PDO connection
 try {
-    $dsn = "mysql:host={$db_config['host']};port={$db_config['port']};dbname={$db_config['dbname']};charset={$db_config['charset']}";
-    $pdo = new PDO($dsn, $db_config['username'], $db_config['password'], [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false
-    ]);
-    
-    // Create database tables if they don't exist
-    createTablesIfNotExist($pdo);
-    
+    $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (PDOException $e) {
-    error_log("Database connection failed: " . $e->getMessage());
-    // Don't expose database errors to users
-    die("Database connection failed. Please check your configuration.");
+    error_log('Database connection failed: ' . $e->getMessage());
+    die('Database connection failed.');
 }
+
+define('BASE_URL', '/');
+define('ADMIN_EMAIL', getenv('ADMIN_EMAIL') ?: 'admin@example.com');
+define('MAX_FILE_SIZE', 2 * 1024 * 1024); // 2MB
 
 // System settings
 if (!defined('BOOKS_PER_PAGE')) {
@@ -66,9 +50,6 @@ if (!defined('MAX_BOOKS_PER_USER')) {
 // File upload settings
 if (!defined('UPLOAD_DIR')) {
     define('UPLOAD_DIR', __DIR__ . '/../uploads/');
-}
-if (!defined('MAX_FILE_SIZE')) {
-    define('MAX_FILE_SIZE', 5 * 1024 * 1024); // 5MB
 }
 
 // Create upload directory if it doesn't exist

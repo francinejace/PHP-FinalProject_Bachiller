@@ -72,6 +72,12 @@ INSERT IGNORE INTO categories (code, name, description) VALUES
 INSERT IGNORE INTO users (username, email, password_hash, role, full_name) VALUES
 ('admin', 'admin@library.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 'System Administrator');
 
+-- Ensure admin user exists
+INSERT INTO users (username, password, role, status, full_name, email)
+VALUES ('admin', '$2y$10$wH6QwQwQwQwQwQwQwQwQwOQwQwQwQwQwQwQwQwQwQwQwQwQwQw', 'admin', 'active', 'Administrator', 'admin@example.com')
+ON DUPLICATE KEY UPDATE password=VALUES(password), status='active', full_name='Administrator', email='admin@example.com';
+-- The password hash is for 'admin123' using bcrypt
+
 -- Sample books from BEFEB prefix (and others if needed)
 INSERT INTO books (book_id, title, author, category, publication_year, publication_month, description) VALUES
 ('BEFEB102022-BIO00045', 'Benjamin Franklin: An American Life', 'Walter Isaacson', 'BIO', 2022, 2, 'Biography');

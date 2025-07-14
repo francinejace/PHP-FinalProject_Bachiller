@@ -30,8 +30,7 @@ RUN docker-php-ext-configure gd \
     --with-jpeg=/usr/include/ \
     && docker-php-ext-install \
     gd \
-    pgsql \
-    pdo_pgsql \
+    pdo_mysql \
     intl \
     zip
 
@@ -44,6 +43,7 @@ COPY --from=composer:2.6 /usr/bin/composer /usr/local/bin/composer
 
 # Copy and install app dependencies
 COPY . /var/www/html/
+COPY .env.example .env
 USER yourUsernameHere
 RUN composer install --no-interaction --prefer-dist
 

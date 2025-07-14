@@ -767,41 +767,6 @@ function isSessionValid() {
 }
 
 /**
- * Check if user has specific permission
- */
-function hasPermission($permission) {
-    if (!isSessionValid()) {
-        return false;
-    }
-    
-    $role = $_SESSION['role'];
-    
-    // Define permissions for each role
-    $permissions = [
-        'admin' => ['manage_books', 'manage_users', 'view_borrowings', 'view_reports'],
-        'librarian' => ['manage_books', 'view_borrowings'],
-        'student' => ['browse_books', 'borrow_books']
-    ];
-    
-    return isset($permissions[$role]) && in_array($permission, $permissions[$role]);
-}
-
-/**
- * Require authentication for specific role
- */
-function requireAuth($required_role = null) {
-    if (!isSessionValid()) {
-        header('Location: ' . BASE_URL . 'user/login.php');
-        exit();
-    }
-    
-    if ($required_role && $_SESSION['role'] !== $required_role) {
-        header('Location: ' . BASE_URL . 'errors/unauthorized.error.php');
-        exit();
-    }
-}
-
-/**
  * Sanitize input data
  */
 function sanitizeInput($data) {
@@ -809,40 +774,6 @@ function sanitizeInput($data) {
         return array_map('sanitizeInput', $data);
     }
     return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
-}
-
-/**
- * Set flash message
- */
-function setFlashMessage($type, $message) {
-    if (!isset($_SESSION['flash_messages'])) {
-        $_SESSION['flash_messages'] = [];
-    }
-    $_SESSION['flash_messages'][] = [
-        'type' => $type,
-        'text' => $message
-    ];
-}
-
-/**
- * Get and clear flash messages
- */
-function getFlashMessages() {
-    $messages = $_SESSION['flash_messages'] ?? [];
-    unset($_SESSION['flash_messages']);
-    return $messages;
-}
-
-/**
- * Format date for display
- */
-function formatDate($date, $format = 'M j, Y') {
-    if (!$date) return 'N/A';
-    try {
-        return date($format, strtotime($date));
-    } catch (Exception $e) {
-        return 'Invalid Date';
-    }
 }
 
 /**
