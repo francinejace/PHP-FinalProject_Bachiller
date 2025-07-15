@@ -2,10 +2,9 @@
 declare(strict_types=1);
 
 require_once BASE_PATH . '/bootstrap.php';
-require_once BASE_PATH . '/vendor/autoload.php';
-require_once UTILS_PATH . '/envSetter.util.php';
 require_once UTILS_PATH . '/auth.util.php';
 require_once UTILS_PATH . '/updateAccount.util.php';
+require_once UTILS_PATH . '/config.php';
 
 Auth::init();
 
@@ -21,18 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Build PDO
-$host = 'host.docker.internal';
-$port = $databases['pgPort'];
-$dbUser = $databases['pgUser'];
-$dbPass = $databases['pgPassword'];
-$dbName = $databases['pgDB'];
-$dsn = "pgsql:host={$host};port={$port};dbname={$dbName}";
-$pdo = new PDO($dsn, $dbUser, $dbPass, [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-]);
-// ensure schema resolution
-$pdo->exec("SET search_path TO public");
+// Use $pdo from config.php for MySQL
+$pdo = $config['pdo'];
 
 // Gather raw input
 $input = [

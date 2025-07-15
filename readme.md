@@ -38,29 +38,15 @@
 
 # Library Management System
 
-A modern PHP library management system with role-based access, dynamic UI, and MySQL integration.
+A simple PHP library management system with role-based access, dynamic UI, and MySQL integration.
 
 ## Quickstart
 
-### Local/Docker
-1. Copy `.env.example` to `.env` and adjust if needed (defaults are set for local dev and Docker):
-   - DB_HOST=db
-   - DB_NAME=library
-   - DB_USER=admin
-   - DB_PASS=admin123
-   - ADMIN_EMAIL=admin@example.com
-2. Run `docker compose up --build`
-3. Access the app at http://localhost:8000
-4. Access MySQL (phpMyAdmin or client):
-   - Host: db (from inside Docker), or localhost:3306 (from host)
-   - User: admin
-   - Password: admin123
-   - Database: library
-
-### Hosting
-- Upload all files except those in `.gitignore`.
-- Set up your `.env` with your production database credentials.
-- Import the SQL schema from `/database/library.sql`.
+### Local Setup (XAMPP or any PHP host)
+1. Import the SQL schema from `/database/library_mysql.sql` into your MySQL server.
+2. Update your database credentials in `utils/config.php` if needed.
+3. Place the project folder in your web server's root (e.g., `htdocs` for XAMPP).
+4. Access the app at `http://localhost/PHP_FinalProject` (or your chosen path).
 
 ### Default Admin User
 - Username: admin
@@ -69,16 +55,10 @@ A modern PHP library management system with role-based access, dynamic UI, and M
 ## Features
 - Admin & Student Dashboards
 - User Login and Registration
-- Book Management (MySQL)
-- Modular Includes (Header, Footer, Navbar)
-- Role-based permissions
-- Responsive design
+- Book Borrowing and Returning
+- Simple, modern UI with your logo (`assets/img/mochi-mochi.png`)
 
-## File Structure
-- See the project folders for organization. Only necessary files and folders are included.
-
-## Environment Variables
-- See `.env.example` for all required variables.
-
-## License
-MIT
+## Notes
+- No Docker, Composer, or .env required.
+- All configuration is in `utils/config.php`.
+- Works on XAMPP, InfinityFree, or any standard PHP/MySQL host.

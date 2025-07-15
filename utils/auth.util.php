@@ -1,8 +1,6 @@
 <?php
 declare(strict_types=1);
 
-include_once UTILS_PATH . "/envSetter.util.php";
-
 class Auth
 {
     /**
@@ -29,20 +27,7 @@ class Auth
     {
         try {
             // 1) Fetch the user record
-            $stmt = $pdo->prepare("
-                SELECT
-                u.id,
-                u.first_name,
-                u.last_name,
-                u.username,
-                u.password,
-                u.role,
-                i.filepath AS profile_image_path
-                FROM public.\"users\" u
-                LEFT JOIN public.images i
-                ON u.profile_image_id = i.id
-                WHERE u.username = :username
-            ");
+            $stmt = $pdo->prepare("SELECT id, username, password_hash, role FROM users WHERE username = :username");
             $stmt->execute([':username' => $username]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -65,7 +50,7 @@ class Auth
         }
 
         // 2) Verify password
-        if (!password_verify($password, $user['password'])) {
+        if (!password_verify($password, $user['password_hash'])) {
             error_log("[Auth::login] Password mismatch for user_id={$user['id']}");
             return false;
         }
@@ -74,11 +59,8 @@ class Auth
         session_regenerate_id(true);
         $_SESSION['user'] = [
             'id' => $user['id'],
-            'first_name' => $user['first_name'],
-            'last_name' => $user['last_name'],
             'username' => $user['username'],
             'role' => $user['role'],
-            'profile_image_path' => $user['profile_image_path'] ?? null,
         ];
         error_log("[Auth::login] Login successful for user_id={$user['id']}");
 

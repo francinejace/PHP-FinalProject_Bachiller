@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 
-include_once UTILS_PATH . '/envSetter.util.php';
 include_once UTILS_PATH . '/auth.util.php';
 include_once UTILS_PATH . '/upload.util.php';
 
@@ -40,7 +39,7 @@ class UpdateAccount
         $currentUser = Auth::user();
         if ($username !== '' && $currentUser) {
             $stmt = $pdo->prepare("
-                SELECT COUNT(*) FROM public.\"users\"
+                SELECT COUNT(*) FROM users
                 WHERE username = :username
                   AND id <> :current_id
             ");
@@ -105,28 +104,20 @@ class UpdateAccount
         $params = [':id' => $currentUser['id']];
 
         // Always update names & username
-        $fields[] = 'first_name = :first';
-        $params[':first'] = trim($data['first_name']);
-        $fields[] = 'middle_name = :middle';
-        $params[':middle'] = trim($data['middle_name']) !== ''
-            ? trim($data['middle_name'])
-            : null;
-        $fields[] = 'last_name = :last';
-        $params[':last'] = trim($data['last_name']);
         $fields[] = 'username = :username';
         $params[':username'] = trim($data['username']);
 
         // If a new password was provided, hash & update it
         if (trim($data['password']) !== '') {
-            $fields[] = 'password = :password';
-            $params[':password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+            $fields[] = 'password_hash = :password_hash';
+            $params[':password_hash'] = password_hash($data['password'], PASSWORD_DEFAULT);
         }
 
         // Build the SET clause
-        $setClause = implode(",\n    ", $fields);
+        $setClause = implode(", ", $fields);
 
         $sql = "
-            UPDATE public.\"users\"
+            UPDATE users
                SET {$setClause}
              WHERE id = :id
         ";

@@ -2,25 +2,15 @@
 declare(strict_types=1);
 
 require_once BASE_PATH . '/bootstrap.php';
-require_once BASE_PATH . '/vendor/autoload.php';
-require_once UTILS_PATH . '/envSetter.util.php';
 require_once UTILS_PATH . '/signup.util.php';
 require_once UTILS_PATH . '/auth.util.php';
+require_once UTILS_PATH . '/config.php';
 
 // Start session so we can flash errors / old input
 Auth::init();
 
-// Build PDO
-$host = 'host.docker.internal';
-$port = $databases['pgPort'];
-$dbUser = $databases['pgUser'];
-$dbPass = $databases['pgPassword'];
-$dbName = $databases['pgDB'];
-
-$dsn = "pgsql:host={$host};port={$port};dbname={$dbName}";
-$pdo = new PDO($dsn, $dbUser, $dbPass, [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-]);
+// Use $pdo from config.php for MySQL
+$pdo = $pdo;
 
 // Only accept POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

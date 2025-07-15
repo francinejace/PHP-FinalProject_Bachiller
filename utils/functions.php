@@ -274,8 +274,22 @@ function searchBooks($query, $filters = [], $limit = 20, $offset = 0) {
     global $pdo;
     
     try {
-        $whereConditions = ["b.status = 'active'"];
+        $whereConditions = [];
         $params = [];
+        
+        // Status filter (support array for IN clause)
+        if (!empty($filters['status'])) {
+            if (is_array($filters['status'])) {
+                $in = str_repeat('?,', count($filters['status']) - 1) . '?';
+                $whereConditions[] = "b.status IN ($in)";
+                $params = array_merge($params, $filters['status']);
+            } else {
+                $whereConditions[] = "b.status = ?";
+                $params[] = $filters['status'];
+            }
+        } else {
+            $whereConditions[] = "b.status = 'active'";
+        }
         
         // Search query
         if (!empty($query)) {
@@ -304,7 +318,7 @@ function searchBooks($query, $filters = [], $limit = 20, $offset = 0) {
         
         // Availability filter
         if (!empty($filters['available_only'])) {
-            $whereConditions[] = "(b.copies - COALESCE(borrowed.count, 0)) > 0";
+            $whereConditions[] = "(b.quantity - COALESCE(borrowed.count, 0)) > 0";
         }
         
         $whereClause = implode(' AND ', $whereConditions);
@@ -329,7 +343,7 @@ function searchBooks($query, $filters = [], $limit = 20, $offset = 0) {
         // Get results
         $sql = "
             SELECT b.*, 
-                   (b.copies - COALESCE(borrowed.count, 0)) as available_copies,
+                   (b.quantity - COALESCE(borrowed.count, 0)) as available_copies,
                    COALESCE(borrowed.count, 0) as borrowed_count
             FROM books b
             LEFT JOIN (
@@ -346,6 +360,9 @@ function searchBooks($query, $filters = [], $limit = 20, $offset = 0) {
         $params[] = $limit;
         $params[] = $offset;
         
+        // Debug: log SQL and params
+        error_log('[searchBooks] SQL: ' . $sql);
+        error_log('[searchBooks] Params: ' . json_encode($params));
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
         $results = $stmt->fetchAll();

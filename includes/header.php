@@ -39,7 +39,18 @@
                 $student_path = 'student/dashboard.php';
             }
             ?>
-            <a href="<?php echo $home_path; ?>" class="logo">Library System</a>
+            <div class="header-logo">
+                <?php
+                // Determine the correct path to assets based on current directory
+                $current_dir = dirname($_SERVER['PHP_SELF']);
+                if (strpos($current_dir, '/user') !== false || strpos($current_dir, '/admin') !== false || strpos($current_dir, '/student') !== false) {
+                    $logo_path = '../assets/img/mochi-mochi.png';
+                } else {
+                    $logo_path = 'assets/img/mochi-mochi.png';
+                }
+                ?>
+                <img src="<?php echo $logo_path; ?>" alt="Library Logo" style="height:60px;">
+            </div>
             <nav>
                 <ul class="nav-menu">
                     <li><a href="<?php echo $home_path; ?>">Home</a></li>

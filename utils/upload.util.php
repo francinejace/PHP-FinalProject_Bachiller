@@ -81,17 +81,16 @@ class Upload
             if ($itExist) {
                 // look for existing image metadata
                 $stmt = $pdo->prepare("
-                    SELECT id FROM public.images
+                    SELECT id FROM images
                     WHERE user_id = :uid AND filename = :fn
                 ");
                 $stmt->execute([':uid' => $relatedId, ':fn' => $filename]);
                 $imageId = $stmt->fetchColumn();
 
                 $stmt = $pdo->prepare("
-                    UPDATE public.images
+                    UPDATE images
                     SET filename = :fn, filepath = :fp, mimetype = :mt, size_bytes = :sz, type = :tp
                     WHERE user_id = :uid AND filename = :fn
-                    RETURNING id
                 ");
                 $stmt->execute([
                     ':uid' => $imageId,
@@ -104,11 +103,10 @@ class Upload
                 $imageId = $stmt->fetchColumn();
             } else {
                 $stmt = $pdo->prepare("
-                INSERT INTO public.images
+                INSERT INTO images
                   (user_id, filename, filepath, mimetype, size_bytes, type)
                 VALUES
                   (:uid, :fn, :fp, :mt, :sz, :tp)
-                RETURNING id
             ");
                 $stmt->execute([
                     ':uid' => $relatedId,
@@ -124,7 +122,7 @@ class Upload
             // 7) If profile, update the users table
             if ($type === 'profile') {
                 $upd = $pdo->prepare("
-                    UPDATE public.\"users\"
+                    UPDATE users
                        SET profile_image_id = :img
                      WHERE id = :uid
                 ");
