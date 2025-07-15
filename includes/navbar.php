@@ -17,7 +17,7 @@ function get_nav_items() {
     } else {
         return [
             ['url' => '/student/dashboard.php', 'label' => 'Dashboard', 'icon' => '🏠'],
-            ['url' => '/student/browse.php', 'label' => 'Browse Books', 'icon' => '🔍'],
+            ['url' => '/student/browse_books.php', 'label' => 'Browse Books', 'icon' => '🔍'],
             ['url' => '/student/borrow.php', 'label' => 'My Books', 'icon' => '📖'],
             ['url' => '/student/return.php', 'label' => 'Return Books', 'icon' => '↩️']
         ];
