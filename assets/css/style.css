@@ -185,7 +185,7 @@ a:hover {
 /* Header nav button hover effect: box only */
 .nav-menu a {
     color: var(--text-dark);
-    background: transparent;
+    background: transparent !important;
     text-decoration: none;
     padding: var(--spacing-sm) var(--spacing-lg);
     border-radius: var(--border-radius-md);
@@ -193,15 +193,15 @@ a:hover {
     font-weight: 600;
     position: relative;
     overflow: hidden;
-    box-shadow: none;
+    box-shadow: none !important;
     border: none;
 }
 
 .nav-menu a:hover,
 .nav-menu a.active {
-    background: #2C1810;
-    color: #fff;
-    box-shadow: none;
+    background: #2C1810 !important;
+    color: #fff !important;
+    box-shadow: none !important;
     text-decoration: none;
     border: none;
 }
