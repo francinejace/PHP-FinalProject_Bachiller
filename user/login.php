@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = $_POST["password"]; // Password is not sanitized as it will be hashed
 
     try {
-        $stmt = $pdo->prepare("SELECT u.id, u.username, u.password_hash, r.name as role FROM users u JOIN roles r ON u.role_id = r.id WHERE u.username = :username");
+        $stmt = $pdo->prepare("SELECT id, username, password_hash, role FROM users WHERE username = :username");
         $stmt->execute([":username" => $username]);
         $user = $stmt->fetch();
 
@@ -72,7 +72,7 @@ include __DIR__ . "/../includes/header.php";
                 </button>
                 
                 <div style="text-align: center; color: var(--text-light);">
-                    <p>Don\'t have an account? <a href="register.php" style="color: var(--primary-brown); text-decoration: none; font-weight: 600;">Create one here</a></p>
+                    <p>Don't have an account? <a href="register.php" style="color: var(--primary-brown); text-decoration: none; font-weight: 600;">Create one here</a></p>
                     <p><a href="../index.php" style="color: var(--text-light); text-decoration: none;">← Back to Home</a></p>
                 </div>
             </form>

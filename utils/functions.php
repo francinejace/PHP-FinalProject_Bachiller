@@ -769,12 +769,12 @@ function sendEmail($to, $subject, $message, $headers = []) {
 /**
  * Sanitize input data
  */
-function sanitizeInput($data) {
-    if (is_array($data)) {
-        return array_map('sanitizeInput', $data);
-    }
-    return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
-}
+// function sanitizeInput( $data) {
+//     if (is_array($data)) {
+//         return array_map('sanitizeInput', $data);
+//     }
+//     return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
+// }
 
 /**
  * Format datetime for display
@@ -798,9 +798,9 @@ function generateToken($length = 32) {
 /**
  * Validate email address
  */
-function isValidEmail($email) {
-    return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
-}
+// function isValidEmail($email) {
+//     return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+// }
 
 /**
  * Get user's full name
