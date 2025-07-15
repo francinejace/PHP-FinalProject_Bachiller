@@ -132,7 +132,7 @@ include __DIR__ . "/includes/header.php";
                 <?php elseif ($_SESSION["role"] === "librarian"): ?>
                     <a href="librarian/dashboard.php" class="btn btn-primary">Go to Librarian Dashboard</a>
                 <?php endif; ?>
-                <a href="books/browse.php" class="btn btn-outline">Browse Books</a>
+                <a href="student/browse_books.php" class="btn btn-outline">Browse Books</a>
             </div>
         <?php endif; ?>
     </div>
@@ -234,7 +234,7 @@ include __DIR__ . "/includes/header.php";
                 </div>
                 <div class="card-body">
                     <div class="quick-actions">
-                        <a href="books/browse.php" class="quick-action-btn" aria-label="Browse available books">
+                        <a href="student/browse_books.php" class="quick-action-btn" aria-label="Browse available books">
                             <span class="action-icon" aria-hidden="true">📚</span>
                             <span class="action-text">Browse Books</span>
                         </a>
