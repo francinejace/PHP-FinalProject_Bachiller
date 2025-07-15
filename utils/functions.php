@@ -762,9 +762,9 @@ function sendEmail($to, $subject, $message, $headers = []) {
 /**
  * Check if user is logged in and session is valid
  */
-function isSessionValid() {
-    return isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSION['role']);
-}
+// function isSessionValid() {
+//     return isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSION['role']);
+// }
 
 /**
  * Sanitize input data
