@@ -3,6 +3,20 @@
 require_once __DIR__ . "/../utils/config.php";
 require_once __DIR__ . "/../utils/functions.php";
 
+// Redirect if user is already logged in
+if (isSessionValid()) {
+    $role = $_SESSION["role"] ?? 'student';
+    
+    if ($role === "admin") {
+        header("Location: ../admin/dashboard.php");
+    } elseif ($role === "librarian") {
+        header("Location: ../librarian/dashboard.php");
+    } else {
+        header("Location: ../student/dashboard.php");
+    }
+    exit();
+}
+
 $error_message = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {

@@ -32,6 +32,8 @@ try {
 define('BASE_URL', '/');
 define('ADMIN_EMAIL', getenv('ADMIN_EMAIL') ?: 'admin@example.com');
 define('MAX_FILE_SIZE', 2 * 1024 * 1024); // 2MB
+define('SESSION_TIMEOUT', 3600); // 1 hour session timeout
+define('CSRF_TOKEN_NAME', 'csrf_token');
 
 // System settings
 if (!defined('BOOKS_PER_PAGE')) {
