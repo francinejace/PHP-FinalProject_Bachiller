@@ -21,6 +21,27 @@ include '../includes/header.php';
     <h2 class="mb-4 title">Student Dashboard</h2>
     <p class="mb-4">Welcome, <b><?= htmlspecialchars($_SESSION['username']) ?></b></p>
 
+    <!-- Quick Actions Section -->
+    <section class="quick-actions-section mb-5">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Quick Actions</h3>
+            </div>
+            <div class="card-body">
+                <div class="quick-actions">
+                    <a href="browse_books.php" class="quick-action-btn" aria-label="Browse available books">
+                        <span class="action-icon" aria-hidden="true">📚</span>
+                        <span class="action-text">Browse Books</span>
+                    </a>
+                    <a href="borrowings.php" class="quick-action-btn" aria-label="View my borrowings">
+                        <span class="action-icon" aria-hidden="true">📖</span>
+                        <span class="action-text">My Borrowings</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <?php if ($flash): ?>
         <div class="alert alert-<?= htmlspecialchars($flash['type']) ?> mb-4">
             <?= htmlspecialchars($flash['message']) ?>
