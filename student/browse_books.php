@@ -16,7 +16,6 @@ $offset = ($page - 1) * $limit;
 
 $filters = [];
 if ($category) $filters['category'] = $category;
-$filters['status'] = ['available', 'active'];
 
 $bookData = searchBooks($search, $filters, $limit, $offset);
 $books = $bookData['books'];

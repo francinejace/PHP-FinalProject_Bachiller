@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errors)) {
         try {
-            $stmt = $pdo->prepare("INSERT INTO books (title, author, category, description, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())");
+            $stmt = $pdo->prepare("INSERT INTO books (title, author, category, description, status) VALUES (?, ?, ?, ?, ?)");
             $stmt->execute([$title, $author, $category, $description, $status]);
             setFlashMessage('Book added successfully!', 'success');
             header('Location: dashboard.php');
