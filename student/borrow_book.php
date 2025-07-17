@@ -20,7 +20,7 @@ $stmt = $pdo->prepare("SELECT * FROM books WHERE book_id = ?");
 $stmt->execute([$book_id_str]);
 $book = $stmt->fetch();
 
-if (!$book || ($book['available_copies'] ?? 1) < 1) {
+if (!$book || ($book['total_copies'] ?? 0) < 1) {
     header('Location: browse_books.php?error=Book+not+available');
     exit();
 }
@@ -33,8 +33,8 @@ $due_date = date('Y-m-d', strtotime('+14 days'));
 $pdo->prepare('INSERT INTO borrowings (user_id, book_id, borrow_date, due_date, status) VALUES (?, ?, ?, ?, ?)')
     ->execute([$user_id, $book['id'], $borrow_date, $due_date, 'active']);
 
-// Update available copies using numeric id
-$pdo->prepare('UPDATE books SET available_copies = available_copies - 1 WHERE id = ?')
+// Update total_copies using numeric id
+$pdo->prepare('UPDATE books SET total_copies = total_copies - 1 WHERE id = ?')
     ->execute([$book['id']]);
 
 header('Location: borrowings.php?message=Book+borrowed+successfully');
