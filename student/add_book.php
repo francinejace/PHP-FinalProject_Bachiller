@@ -22,8 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errors)) {
         try {
-            $stmt = $pdo->prepare("INSERT INTO books (title, author, category, description, status) VALUES (?, ?, ?, ?, ?)");
-            $stmt->execute([$title, $author, $category, $description, $status]);
+            // Generate a unique book_id (e.g., random 8-character string)
+            $book_id = bin2hex(random_bytes(4));
+            $stmt = $pdo->prepare("INSERT INTO books (book_id, title, author, category, description, status) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$book_id, $title, $author, $category, $description, $status]);
             setFlashMessage('Book added successfully!', 'success');
             header('Location: dashboard.php');
             exit();

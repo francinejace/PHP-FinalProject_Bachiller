@@ -7,38 +7,14 @@ if (!isSessionValid() || ($_SESSION['role'] ?? '') !== 'student') {
     exit();
 }
 
-// Handle search, filter, and pagination
-$search = trim($_GET['search'] ?? '');
-$category = trim($_GET['category'] ?? '');
-$page = max(1, (int)($_GET['page'] ?? 1));
-$limit = 10;
-$offset = ($page - 1) * $limit;
-
-$filters = [];
-if ($category) $filters['category'] = $category;
-
-$bookData = searchBooks($search, $filters, $limit, $offset);
+// Fetch all books (no search/filter/pagination)
+$bookData = searchBooks('', [], 1000, 0); // Large limit to show all
 $books = $bookData['books'];
-$total = $bookData['total'];
-$totalPages = ceil($total / $limit);
-
-// Get all categories for filter dropdown
-$categories = getBookCategories();
 
 include '../includes/header.php';
 ?>
 <div class="container main-content fade-in">
     <h2 class="mb-4 title">Browse Books</h2>
-    <form method="get" class="d-flex mb-4" style="gap:1rem; align-items:center;">
-        <input type="text" name="search" class="form-input" placeholder="Search by title, author, or description" value="<?= htmlspecialchars($search) ?>" style="max-width:250px;">
-        <select name="category" class="form-input" style="max-width:180px;">
-            <option value="">All Categories</option>
-            <?php foreach ($categories as $cat): ?>
-                <option value="<?= htmlspecialchars($cat['category']) ?>" <?= $category === $cat['category'] ? 'selected' : '' ?>><?= htmlspecialchars($cat['category']) ?></option>
-            <?php endforeach; ?>
-        </select>
-        <button type="submit" class="btn btn-primary">Search</button>
-    </form>
     <div class="card">
         <h3 class="card-title mb-3">All Books</h3>
         <?php if (empty($books)): ?>
@@ -53,6 +29,7 @@ include '../includes/header.php';
                         <th>Category</th>
                         <th>Description</th>
                         <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,25 +40,21 @@ include '../includes/header.php';
                             <td><?= htmlspecialchars($book['category']) ?></td>
                             <td><?= htmlspecialchars($book['description']) ?></td>
                             <td><?= htmlspecialchars($book['status']) ?></td>
+                            <td>
+                                <a href="view_book.php?id=<?= urlencode($book['id']) ?>" class="btn btn-info btn-sm">View</a>
+                                <a href="edit_book.php?id=<?= urlencode($book['id']) ?>" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="delete_book.php?id=<?= urlencode($book['id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this book?');">Delete</a>
+                                <?php if (($book['available_copies'] ?? 1) > 0): ?>
+                                    <a href="borrow_book.php?id=<?= urlencode($book['id']) ?>" class="btn btn-success btn-sm">Borrow</a>
+                                <?php else: ?>
+                                    <span class="text-muted">Not Available</span>
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
-        <!-- Pagination -->
-        <?php if ($totalPages > 1): ?>
-        <nav class="pagination-nav mt-4">
-            <ul class="pagination">
-                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                    <li>
-                        <a href="?search=<?= urlencode($search) ?>&category=<?= urlencode($category) ?>&page=<?= $i ?>" class="pagination-link<?= $i === $page ? ' active' : '' ?>">
-                            <?= $i ?>
-                        </a>
-                    </li>
-                <?php endfor; ?>
-            </ul>
-        </nav>
-        <?php endif; ?>
         <?php endif; ?>
     </div>
 </div>

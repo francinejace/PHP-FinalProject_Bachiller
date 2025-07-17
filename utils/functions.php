@@ -272,11 +272,10 @@ function getOverdueBooks($limit = 100) {
  */
 function searchBooks($query, $filters = [], $limit = 20, $offset = 0) {
     global $pdo;
-    
     try {
         $whereConditions = [];
         $params = [];
-        
+
         // Status filter (support array for IN clause)
         if (array_key_exists('status', $filters)) {
             if (!empty($filters['status'])) {
@@ -290,39 +289,41 @@ function searchBooks($query, $filters = [], $limit = 20, $offset = 0) {
                 }
             }
         }
-        
+        // Only add status filter if present in $filters
+        // (No default status filter)
+
         // Search query
         if (!empty($query)) {
             $whereConditions[] = "(b.title LIKE ? OR b.author LIKE ? OR b.isbn LIKE ? OR b.description LIKE ?)";
             $searchTerm = "%{$query}%";
             $params = array_merge($params, [$searchTerm, $searchTerm, $searchTerm, $searchTerm]);
         }
-        
+
         // Category filter
         if (!empty($filters['category'])) {
             $whereConditions[] = "b.category = ?";
             $params[] = $filters['category'];
         }
-        
+
         // Author filter
         if (!empty($filters['author'])) {
             $whereConditions[] = "b.author LIKE ?";
             $params[] = "%{$filters['author']}%";
         }
-        
+
         // Year filter
         if (!empty($filters['year'])) {
             $whereConditions[] = "YEAR(b.publication_date) = ?";
             $params[] = $filters['year'];
         }
-        
+
         // Availability filter
         if (!empty($filters['available_only'])) {
             $whereConditions[] = "(b.quantity - COALESCE(borrowed.count, 0)) > 0";
         }
-        
-        $whereClause = implode(' AND ', $whereConditions);
-        
+
+        $whereClause = $whereConditions ? ("WHERE " . implode(' AND ', $whereConditions)) : '';
+
         // Get total count
         $countSql = "
             SELECT COUNT(DISTINCT b.id) as total
@@ -333,13 +334,13 @@ function searchBooks($query, $filters = [], $limit = 20, $offset = 0) {
                 WHERE return_date IS NULL 
                 GROUP BY book_id
             ) borrowed ON b.id = borrowed.book_id
-            WHERE {$whereClause}
+            $whereClause
         ";
-        
+
         $stmt = $pdo->prepare($countSql);
         $stmt->execute($params);
         $total = $stmt->fetch()['total'];
-        
+
         // Get results
         $sql = "
             SELECT b.*, 
@@ -352,21 +353,18 @@ function searchBooks($query, $filters = [], $limit = 20, $offset = 0) {
                 WHERE return_date IS NULL 
                 GROUP BY book_id
             ) borrowed ON b.id = borrowed.book_id
-            WHERE {$whereClause}
+            $whereClause
             ORDER BY b.title ASC 
             LIMIT ? OFFSET ?
         ";
-        
+
         $params[] = $limit;
         $params[] = $offset;
-        
-        // Debug: log SQL and params
-        error_log('[searchBooks] SQL: ' . $sql);
-        error_log('[searchBooks] Params: ' . json_encode($params));
+
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
         $results = $stmt->fetchAll();
-        
+
         return [
             'books' => $results,
             'total' => $total,
