@@ -8,16 +8,16 @@ if (!isSessionValid() || ($_SESSION['role'] ?? '') !== 'student') {
 }
 
 $user_id = $_SESSION['user_id'];
-$book_id = isset($_GET['book_id']) ? $_GET['book_id'] : '';
+$book_id_str = isset($_GET['book_id']) ? $_GET['book_id'] : '';
 
-if (!$book_id) {
+if (!$book_id_str) {
     header('Location: browse_books.php?error=Invalid+book+ID');
     exit();
 }
 
-// Fetch the book by book_id
+// Fetch the book by book_id (string), get its numeric id
 $stmt = $pdo->prepare("SELECT * FROM books WHERE book_id = ?");
-$stmt->execute([$book_id]);
+$stmt->execute([$book_id_str]);
 $book = $stmt->fetch();
 
 if (!$book || ($book['available_copies'] ?? 1) < 1) {
@@ -29,13 +29,13 @@ if (!$book || ($book['available_copies'] ?? 1) < 1) {
 $borrow_date = date('Y-m-d');
 $due_date = date('Y-m-d', strtotime('+14 days'));
 
-// Insert borrowing record
+// Insert borrowing record using numeric id
 $pdo->prepare('INSERT INTO borrowings (user_id, book_id, borrow_date, due_date, status) VALUES (?, ?, ?, ?, ?)')
-    ->execute([$user_id, $book['book_id'], $borrow_date, $due_date, 'active']);
+    ->execute([$user_id, $book['id'], $borrow_date, $due_date, 'active']);
 
-// Update available copies
-$pdo->prepare('UPDATE books SET available_copies = available_copies - 1 WHERE book_id = ?')
-    ->execute([$book['book_id']]);
+// Update available copies using numeric id
+$pdo->prepare('UPDATE books SET available_copies = available_copies - 1 WHERE id = ?')
+    ->execute([$book['id']]);
 
 header('Location: borrowings.php?message=Book+borrowed+successfully');
 exit; 
