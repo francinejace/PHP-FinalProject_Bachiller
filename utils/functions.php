@@ -278,17 +278,17 @@ function searchBooks($query, $filters = [], $limit = 20, $offset = 0) {
         $params = [];
         
         // Status filter (support array for IN clause)
-        if (!empty($filters['status'])) {
-            if (is_array($filters['status'])) {
-                $in = str_repeat('?,', count($filters['status']) - 1) . '?';
-                $whereConditions[] = "b.status IN ($in)";
-                $params = array_merge($params, $filters['status']);
-            } else {
-                $whereConditions[] = "b.status = ?";
-                $params[] = $filters['status'];
+        if (array_key_exists('status', $filters)) {
+            if (!empty($filters['status'])) {
+                if (is_array($filters['status'])) {
+                    $in = str_repeat('?,', count($filters['status']) - 1) . '?';
+                    $whereConditions[] = "b.status IN ($in)";
+                    $params = array_merge($params, $filters['status']);
+                } else {
+                    $whereConditions[] = "b.status = ?";
+                    $params[] = $filters['status'];
+                }
             }
-        } else {
-            $whereConditions[] = "b.status = 'active'";
         }
         
         // Search query
