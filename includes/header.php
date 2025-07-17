@@ -27,7 +27,7 @@
                 $home_path = '../index.php';
                 $login_path = 'login.php';
                 $register_path = 'register.php';
-                $logout_path = 'logout.php';
+                $logout_path = '../user/logout.php';
                 $admin_path = '../admin/dashboard.php';
                 $student_path = '../student/dashboard.php';
             } else {
