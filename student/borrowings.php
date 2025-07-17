@@ -8,7 +8,10 @@ if (!isSessionValid() || ($_SESSION['role'] ?? '') !== 'student') {
 }
 
 $user_id = $_SESSION['user_id'];
-$borrowings = getUserBorrowings($user_id);
+// Join borrowings with books using book_id
+$stmt = $pdo->prepare("SELECT b.title, br.borrow_date, br.due_date, br.status FROM borrowings br JOIN books b ON br.book_id = b.book_id WHERE br.user_id = ?");
+$stmt->execute([$user_id]);
+$borrowings = $stmt->fetchAll();
 
 include '../includes/header.php';
 ?>

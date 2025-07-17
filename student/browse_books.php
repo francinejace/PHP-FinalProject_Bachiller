@@ -7,9 +7,9 @@ if (!isSessionValid() || ($_SESSION['role'] ?? '') !== 'student') {
     exit();
 }
 
-// Fetch all books (no search/filter/pagination)
-$bookData = searchBooks('', [], 1000, 0); // Large limit to show all
-$books = $bookData['books'];
+// Fetch all books directly from the database
+$stmt = $pdo->query("SELECT * FROM books");
+$books = $stmt->fetchAll();
 
 include '../includes/header.php';
 ?>
@@ -41,11 +41,11 @@ include '../includes/header.php';
                             <td><?= htmlspecialchars($book['description']) ?></td>
                             <td><?= htmlspecialchars($book['status']) ?></td>
                             <td>
-                                <a href="view_book.php?id=<?= urlencode($book['id']) ?>" class="btn btn-info btn-sm">View</a>
-                                <a href="edit_book.php?id=<?= urlencode($book['id']) ?>" class="btn btn-warning btn-sm">Edit</a>
-                                <a href="delete_book.php?id=<?= urlencode($book['id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this book?');">Delete</a>
+                                <a href="view_book.php?book_id=<?= urlencode($book['book_id']) ?>" class="btn btn-info btn-sm">View</a>
+                                <a href="edit_book.php?book_id=<?= urlencode($book['book_id']) ?>" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="delete_book.php?book_id=<?= urlencode($book['book_id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this book?');">Delete</a>
                                 <?php if (($book['available_copies'] ?? 1) > 0): ?>
-                                    <a href="borrow_book.php?id=<?= urlencode($book['id']) ?>" class="btn btn-success btn-sm">Borrow</a>
+                                    <a href="borrow_book.php?book_id=<?= urlencode($book['book_id']) ?>" class="btn btn-success btn-sm">Borrow</a>
                                 <?php else: ?>
                                     <span class="text-muted">Not Available</span>
                                 <?php endif; ?>
