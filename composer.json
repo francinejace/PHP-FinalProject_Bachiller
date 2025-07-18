@@ -1,0 +1,38 @@
+{
+    "name": "francinejace/php-finalproject-bachiller",
+    "description": "LibraX Library Management System - A comprehensive PHP-based library management solution",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Francine Jace",
+            "email": "francine.jace@example.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-html coverage"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+} 
